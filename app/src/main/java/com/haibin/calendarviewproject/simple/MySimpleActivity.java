@@ -72,8 +72,8 @@ public class MySimpleActivity extends BaseActivity implements
         int day = mCalendarView.getCurDay();
 
         Map<String, Calendar> map = new HashMap<>();
-        map.put(getSchemeCalendar(year, month, day, 0xFFff0000, "今").toString(),
-                getSchemeCalendar(year, month, day, 0xFFff0000, "今"));
+        map.put(getSchemeCalendar(year, month, 23, 0xFFff0000, "事").toString(),
+                getSchemeCalendar(year, month, 23, 0xFFff0000, "事"));
         //此方法在巨大的数据量上不影响遍历性能，推荐使用
         mCalendarView.setSchemeDate(map);
     }

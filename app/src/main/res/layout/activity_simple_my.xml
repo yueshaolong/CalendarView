@@ -38,13 +38,14 @@
             android:src="@mipmap/ic_launcher"/>
     </LinearLayout>
 
-    <com.haibin.calendarview.CalendarLayout
-        android:id="@+id/calendarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#fff"
-        android:orientation="vertical"
-        app:calendar_content_view_id="@+id/recyclerView">
+<!--    <com.haibin.calendarview.CalendarLayout-->
+<!--        android:id="@+id/calendarLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="#fff"-->
+<!--        android:orientation="vertical"-->
+<!--        app:calendar_show_mode="only_month_view"-->
+<!--        app:calendar_content_view_id="@+id/recyclerView">-->
 
         <com.haibin.calendarview.CalendarView
             android:id="@+id/calendarView"
@@ -55,9 +56,11 @@
             app:calendar_padding="10dp"
             app:month_view="com.haibin.calendarviewproject.simple.MySimpleMonthView"
             app:month_view_show_mode="mode_all"
-            app:other_month_text_color="#e1e1e1"
-            app:current_month_lunar_text_color="#CFCFCF"
+            app:current_month_lunar_text_color="#0000ff"
+            app:other_month_lunar_text_color="#00ff00"
             app:current_month_text_color="#333333"
+            app:other_month_text_color="#e1e1e1"
+            app:current_day_text_color="#00ff00"
             app:day_text_size="18sp"
             app:min_year="2004"
             app:min_year_month="1"
@@ -76,7 +79,8 @@
             app:year_view_month_text_color="#ff0000"
             app:year_view_month_text_size="20sp"
             app:year_view_scheme_color="#f17706"/>
-    </com.haibin.calendarview.CalendarLayout>
+
+<!--    </com.haibin.calendarview.CalendarLayout>-->
 
 
 

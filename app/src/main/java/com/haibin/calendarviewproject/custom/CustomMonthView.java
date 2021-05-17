@@ -19,7 +19,7 @@ public class CustomMonthView extends MonthView {
     private int mRadius;
 
     /**
-     * 自定义魅族标记的文本画笔
+     * 自定义标记的文本画笔(画右上角文字颜色；)
      */
     private Paint mTextPaint = new Paint();
 
@@ -48,7 +48,7 @@ public class CustomMonthView extends MonthView {
 
     private float mCircleRadius;
     /**
-     * 自定义魅族标记的圆形背景
+     * 自定义标记的圆形背景;(右上角文字的圆形背景色)
      */
     private Paint mSchemeBasicPaint = new Paint();
 
@@ -63,7 +63,7 @@ public class CustomMonthView extends MonthView {
         mTextPaint.setFakeBoldText(true);
 
 
-        mSolarTermTextPaint.setColor(0xff489dff);
+        mSolarTermTextPaint.setColor(0xffff0000);
         mSolarTermTextPaint.setAntiAlias(true);
         mSolarTermTextPaint.setTextAlign(Paint.Align.CENTER);
 
@@ -71,7 +71,7 @@ public class CustomMonthView extends MonthView {
         mSchemeBasicPaint.setStyle(Paint.Style.FILL);
         mSchemeBasicPaint.setTextAlign(Paint.Align.CENTER);
         mSchemeBasicPaint.setFakeBoldText(true);
-        mSchemeBasicPaint.setColor(Color.WHITE);
+        mSchemeBasicPaint.setColor(Color.BLACK);
 
 
         mCurrentDayPaint.setAntiAlias(true);
@@ -137,7 +137,7 @@ public class CustomMonthView extends MonthView {
 
         if (hasScheme) {
             canvas.drawCircle(x + mItemWidth - mPadding - mCircleRadius / 2, y + mPadding + mCircleRadius, mCircleRadius, mSchemeBasicPaint);
-            mTextPaint.setColor(calendar.getSchemeColor());
+            mTextPaint.setColor(calendar.getSchemeColor());//画右上角文字颜色
             canvas.drawText(calendar.getScheme(), x + mItemWidth - mPadding - mCircleRadius, y + mPadding + mSchemeBaseLine, mTextPaint);
         }
 
@@ -177,8 +177,10 @@ public class CustomMonthView extends MonthView {
 
             canvas.drawText(calendar.getLunar(), cx, mTextBaseLine + y + mItemHeight / 10,
                     calendar.isCurrentDay() ? mCurDayLunarTextPaint :
-                            calendar.isCurrentMonth() ? !TextUtils.isEmpty(calendar.getSolarTerm()) ? mSolarTermTextPaint  :
-                                    mCurMonthLunarTextPaint : mOtherMonthLunarTextPaint);
+                            calendar.isCurrentMonth() ?
+                                    !TextUtils.isEmpty(calendar.getSolarTerm()) ? mSolarTermTextPaint  :
+                                    mCurMonthLunarTextPaint
+                                    : mOtherMonthLunarTextPaint);
         }
     }
 

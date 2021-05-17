@@ -47,7 +47,7 @@ public class MyCustomRangeMonthView extends RangeMonthView {
             //
         }
 
-        return false;
+        return true;
     }
 
     @Override

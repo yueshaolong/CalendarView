@@ -121,8 +121,8 @@ public class CustomActivity extends BaseActivity implements
                 getSchemeCalendar(year, month, 9, 0xFFdf1356, "议"));
         map.put(getSchemeCalendar(year, month, 13, 0xFFedc56d, "记").toString(),
                 getSchemeCalendar(year, month, 13, 0xFFedc56d, "记"));
-        map.put(getSchemeCalendar(year, month, 14, 0xFFedc56d, "记").toString(),
-                getSchemeCalendar(year, month, 14, 0xFFedc56d, "记"));
+        map.put(getSchemeCalendar(year, month, 14, 0xFFffff00, "记").toString(),
+                getSchemeCalendar(year, month, 14, 0xFFffff00, "记"));
         map.put(getSchemeCalendar(year, month, 15, 0xFFaacc44, "假").toString(),
                 getSchemeCalendar(year, month, 15, 0xFFaacc44, "假"));
         map.put(getSchemeCalendar(year, month, 18, 0xFFbc13f0, "记").toString(),
