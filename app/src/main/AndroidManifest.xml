@@ -22,6 +22,7 @@
 
         <activity android:name=".meizu.MeiZuActivity" />
         <activity android:name=".multi.MultiActivity" />
+        <activity android:name=".multi.MyMultiActivity" />
         <activity android:name=".index.IndexActivity" />
         <activity android:name=".simple.SimpleActivity" />
         <activity android:name=".simple.MySimpleActivity" />

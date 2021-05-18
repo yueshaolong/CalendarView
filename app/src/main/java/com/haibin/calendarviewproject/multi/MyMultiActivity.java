@@ -1,66 +1,115 @@
-package com.haibin.calendarviewproject.range;
+package com.haibin.calendarviewproject.multi;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
+import com.haibin.calendarviewproject.Article;
+import com.haibin.calendarviewproject.ArticleAdapter;
 import com.haibin.calendarviewproject.R;
 import com.haibin.calendarviewproject.base.activity.BaseActivity;
+import com.haibin.calendarviewproject.group.GroupItemDecoration;
+import com.haibin.calendarviewproject.group.GroupRecyclerView;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class MyRangeActivity extends BaseActivity implements
+public class MyMultiActivity extends BaseActivity implements
+        CalendarView.OnCalendarMultiSelectListener,
         CalendarView.OnCalendarInterceptListener,
-        CalendarView.OnCalendarRangeSelectListener,
+        CalendarView.OnYearChangeListener,
         CalendarView.OnMonthChangeListener,
+        CalendarView.OnCalendarSelectListener,
         View.OnClickListener {
-    CalendarLayout mCalendarLayout;
+
+    TextView mTextMonthDay;
+
+    TextView mTextYear;
+
+    TextView mTextLunar;
+
+    TextView mTextCurrentDay;
+
     CalendarView mCalendarView;
-    private TextView tv_time;
-    private int mCalendarHeight;
+
+    RelativeLayout mRelativeTool;
+    private int mYear;
+    CalendarLayout mCalendarLayout;
+    GroupRecyclerView mRecyclerView;
 
     public static void show(Context context) {
-        context.startActivity(new Intent(context, MyRangeActivity.class));
+        context.startActivity(new Intent(context, MyMultiActivity.class));
     }
 
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_range_my;
+        return R.layout.activity_multi_my;
     }
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void initView() {
         setStatusBarDarkMode();
-
-        tv_time = findViewById(R.id.tv_time);
-        findViewById(R.id.iv_left).setOnClickListener(this);
-        findViewById(R.id.iv_right).setOnClickListener(this);
-        mCalendarLayout = findViewById(R.id.calendarLayout);
+        mTextMonthDay = findViewById(R.id.tv_month_day);
+        mTextYear = findViewById(R.id.tv_year);
+        mTextLunar = findViewById(R.id.tv_lunar);
+        mRelativeTool = findViewById(R.id.rl_tool);
         mCalendarView = findViewById(R.id.calendarView);
-        mCalendarView.setOnCalendarRangeSelectListener(this);
-        mCalendarView.setOnMonthChangeListener(this);
+        mTextCurrentDay = findViewById(R.id.tv_current_day);
+        mTextMonthDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mCalendarLayout.isExpand()) {
+                    mCalendarLayout.expand();
+                    return;
+                }
+                mCalendarView.showYearSelectLayout(mYear);
+                mTextLunar.setVisibility(View.GONE);
+                mTextYear.setVisibility(View.GONE);
+                mTextMonthDay.setText(String.valueOf(mYear));
+            }
+        });
+        findViewById(R.id.fl_current).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCalendarView.scrollToCurrent();
+                //mCalendarView.setMaxMultiSelectSize(9);
+//                Calendar calendar = new Calendar();
+//                calendar.setYear(mCalendarView.getCurYear());
+//                calendar.setMonth(mCalendarView.getCurMonth());
+//                calendar.setDay(mCalendarView.getCurDay());
+//                mCalendarView.putMultiSelect(calendar);
+//                mCalendarView.removeMultiSelect(calendar);
+//                mCalendarView.getMultiSelectCalendars();
+            }
+        });
+        mCalendarLayout = findViewById(R.id.calendarLayout);
+        mCalendarView.setOnCalendarMultiSelectListener(this);
+        mCalendarView.setOnYearChangeListener(this);
+        mCalendarView.setOnCalendarSelectListener(this);
         //设置日期拦截事件，当前有效
         mCalendarView.setOnCalendarInterceptListener(this);
-
-        findViewById(R.id.tv_commit).setOnClickListener(this);
-
-        mCalendarHeight = dipToPx(this, 50);
-        mCalendarView.post(new Runnable() {
+        mCalendarView.setOnMonthChangeListener(this);
+        mTextYear.setText(String.valueOf(mCalendarView.getCurYear()));
+        mYear = mCalendarView.getCurYear();
+        mTextMonthDay.setText(mCalendarView.getCurMonth() + "月" + mCalendarView.getCurDay() + "日");
+        mTextLunar.setText("今日");
+        mTextCurrentDay.setText(String.valueOf(mCalendarView.getCurDay()));
+        findViewById(R.id.iv_clear).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                mCalendarView.scrollToCurrent();
+            public void onClick(View v) {
+                mCalendarView.clearMultiSelect();
             }
         });
     }
@@ -69,8 +118,7 @@ public class MyRangeActivity extends BaseActivity implements
     protected void initData() {
         int year = mCalendarView.getCurYear();
         int month = mCalendarView.getCurMonth();
-        tv_time.setText(year+"年"+month+"月");
-        int day = mCalendarView.getCurDay();
+
         Map<String, Calendar> map = new HashMap<>();
         map.put(getSchemeCalendar(year, month, 1, 0xFFff0000, "休").toString(),
                 getSchemeCalendar(year, month, 1, 0xFFff0000, "休"));
@@ -121,6 +169,19 @@ public class MyRangeActivity extends BaseActivity implements
                 getSchemeCalendar(2021, 10, 9, 0xFFff0000, "班"));
         //此方法在巨大的数据量上不影响遍历性能，推荐使用
         mCalendarView.setSchemeDate(map);
+
+
+        mRecyclerView = findViewById(R.id.recyclerView);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.addItemDecoration(new GroupItemDecoration<String, Article>());
+        mRecyclerView.setAdapter(new ArticleAdapter(this));
+        mRecyclerView.notifyDataSetChanged();
+    }
+
+
+    @Override
+    public void onClick(View v) {
+
     }
 
     private Calendar getSchemeCalendar(int year, int month, int day, int color, String text) {
@@ -138,47 +199,59 @@ public class MyRangeActivity extends BaseActivity implements
 
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.iv_left:
-                mCalendarView.scrollToPre();
-                break;
-            case R.id.iv_right:
-                mCalendarView.scrollToNext();
-                break;
-            case R.id.tv_commit:
-                List<Calendar> calendars = mCalendarView.getSelectCalendarRange();
-                if (calendars == null || calendars.size() == 0) {
-                    Toast.makeText(this, "请选择开始时间和结束时间", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                for (Calendar c : calendars) {
-                    Log.e("SelectCalendarRange", c.toString()
-                            + " -- " + c.getTimeInMillis()
-                            + "  --  " + c.getLunar());
-                }
-                Toast.makeText(this, String.format("选择了%s个日期: %s —— %s", calendars.size(),
-                        calendars.get(0).toString(), calendars.get(calendars.size() - 1).toString()),
-                        Toast.LENGTH_SHORT).show();
-                break;
-        }
+    public void onCalendarMultiSelectOutOfRange(Calendar calendar) {
+        Log.e("OutOfRange", "OutOfRange" + calendar);
     }
 
-    private static int dipToPx(Context context, float dpValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
+    @Override
+    public void onMultiSelectOutOfSize(Calendar calendar, int maxSize) {
+        Toast.makeText(this, "超过最大选择数量 ：" + maxSize, Toast.LENGTH_SHORT).show();
+    }
+
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void onCalendarMultiSelect(Calendar calendar, int curSize, int maxSize) {
+        mTextLunar.setVisibility(View.VISIBLE);
+        mTextYear.setVisibility(View.VISIBLE);
+        mTextMonthDay.setText(calendar.getMonth() + "月" + calendar.getDay() + "日");
+        mTextYear.setText(String.valueOf(calendar.getYear()));
+        mTextLunar.setText(calendar.getLunar());
+        mYear = calendar.getYear();
+        Log.e("onDateSelected", "  -- " + calendar.getYear() +
+                "  --  " + calendar.getMonth() +
+                "  -- " + calendar.getDay() +
+                "  --  " + "  --   " + calendar.getScheme());
+    }
+
+
+    @Override
+    public void onYearChange(int year) {
+        mTextMonthDay.setText(String.valueOf(year));
+    }
+
+
+    @Override
+    public void onMonthChange(int year, int month) {
+        Log.e("onMonthChange", "  -- " + year + "  --  " + month);
     }
 
     /**
      * 屏蔽某些不可点击的日期，可根据自己的业务自行修改
      * 如 calendar > 2018年1月1日 && calendar <= 2020年12月31日
+     *
      * @param calendar calendar
      * @return 是否屏蔽某些不可点击的日期，MonthView和WeekView有类似的API可调用
      */
     @Override
     public boolean onCalendarIntercept(Calendar calendar) {
-        return false;
-        //return calendar.getTimeInMillis()<getCurrentDayMill() ;
+        //Log.e("onCalendarIntercept", calendar.toString());
+        int day = calendar.getDay();
+//        return day == 1 || day == 3 || day == 6 || day == 11 ||
+//                day == 12 || day == 15 || day == 20 || day == 26;
+//        return calendar.hasScheme();
+        return calendar.getYear()<= mCalendarView.getCurYear() &&
+                calendar.getMonth() <= mCalendarView.getCurMonth() &&
+                calendar.getDay() < mCalendarView.getCurDay();
     }
 
     @Override
@@ -189,24 +262,15 @@ public class MyRangeActivity extends BaseActivity implements
     }
 
     @Override
-    public void onMonthChange(int year, int month) {
-        Log.e("onMonthChange", "  -- " + year + "  --  " + month);
-        tv_time.setText(year+"年"+month+"月");
+    public void onCalendarOutOfRange(Calendar calendar) {
+
     }
 
     @Override
-    public void onCalendarSelectOutOfRange(Calendar calendar) {
-    }
-
-    @Override
-    public void onSelectOutOfRange(Calendar calendar, boolean isOutOfMinRange) {
-        Toast.makeText(this,
-                calendar.toString() + (isOutOfMinRange ? "小于最小选择范围" : "超过最大选择范围"),
-                Toast.LENGTH_SHORT).show();
-    }
-
-    @SuppressLint("SetTextI18n")
-    @Override
-    public void onCalendarRangeSelect(Calendar calendar, boolean isEnd) {
+    public void onCalendarSelect(Calendar calendar, boolean isClick) {
+        Log.e("onDateSelected", "  -- " + calendar.getYear() +
+                "  --  " + calendar.getMonth() +
+                "  -- " + calendar.getDay() +
+                "  --  " + isClick + "  --   " + calendar.getScheme());
     }
 }

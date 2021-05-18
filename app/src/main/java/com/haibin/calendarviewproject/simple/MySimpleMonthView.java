@@ -9,18 +9,12 @@ import android.text.TextUtils;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.MonthView;
 
-/**
- * 高仿魅族日历布局
- * Created by huanghaibin on 2017/11/15.
- */
 
 public class MySimpleMonthView extends MonthView {
     /**
-     * 自定义标记的文本画笔
+     * 周末画笔
      */
-    private Paint mTextPaint = new Paint();
-
-
+    private Paint mWeekEndTextPaint = new Paint();
     /**
      * 24节气画笔
      */
@@ -30,35 +24,22 @@ public class MySimpleMonthView extends MonthView {
      * 背景圆点
      */
     private Paint mPointPaint = new Paint();
-
-    /**
-     * 今天的背景色
-     */
-    private Paint mCurrentDayPaint = new Paint();
     /**
      * 自定义标记的圆形背景
      */
     private Paint mSchemeBasicPaint = new Paint();
-    /**
-     * 圆点半径
-     */
-    private float mPointRadius;
-    private int mPadding;
-    private float mCircleRadius;
-    private float mSchemeBaseLine;
-
-    private int mRadius;
-
+    private Context context;
     public MySimpleMonthView(Context context) {
         super(context);
+        this.context = context;
 
-        mTextPaint.setTextSize(dipToPx(context, 8));
-        mTextPaint.setColor(0xffffffff);
-        mTextPaint.setAntiAlias(true);
-        mTextPaint.setFakeBoldText(true);
-
+        mWeekEndTextPaint.setColor(0xff666666);
+        mWeekEndTextPaint.setTextSize(dipToPx(getContext(), 18));
+        mWeekEndTextPaint.setAntiAlias(true);
+        mWeekEndTextPaint.setTextAlign(Paint.Align.CENTER);
 
         mSolarTermTextPaint.setColor(0xff489dff);
+        mSolarTermTextPaint.setTextSize(dipToPx(getContext(), 10));
         mSolarTermTextPaint.setAntiAlias(true);
         mSolarTermTextPaint.setTextAlign(Paint.Align.CENTER);
 
@@ -66,46 +47,21 @@ public class MySimpleMonthView extends MonthView {
         mSchemeBasicPaint.setStyle(Paint.Style.FILL);
         mSchemeBasicPaint.setTextAlign(Paint.Align.CENTER);
         mSchemeBasicPaint.setFakeBoldText(true);
-        mSchemeBasicPaint.setColor(Color.BLACK);
+        mSchemeBasicPaint.setColor(Color.WHITE);
 
-
-        mCurrentDayPaint.setAntiAlias(true);
-        mCurrentDayPaint.setStyle(Paint.Style.FILL);
-        mCurrentDayPaint.setColor(0xFFeaeaea);
 
         mPointPaint.setAntiAlias(true);
         mPointPaint.setStyle(Paint.Style.FILL);
         mPointPaint.setTextAlign(Paint.Align.CENTER);
         mPointPaint.setColor(Color.RED);
 
-        mCircleRadius = dipToPx(getContext(), 7);
-
-        mPadding = dipToPx(getContext(), 5);
-
-        mPointRadius = dipToPx(context, 2);
-
-        Paint.FontMetrics metrics = mSchemeBasicPaint.getFontMetrics();
-        mSchemeBaseLine = mCircleRadius - metrics.descent + (metrics.bottom - metrics.top) / 2 + dipToPx(getContext(), 1);
-
-
-    }
-
-    @Override
-    protected void onPreviewHook() {
-        mRadius = Math.min(mItemWidth, mItemHeight) / 5 * 2;
-        mSchemePaint.setStyle(Paint.Style.STROKE);
-    }
-
-    @Override
-    protected void onLoopStart(int x, int y) {
-
     }
 
     @Override
     protected boolean onDrawSelected(Canvas canvas, Calendar calendar, int x, int y, boolean hasScheme) {
         int cx = x + mItemWidth / 2;
-        int cy = y + mItemHeight / 2;
-        canvas.drawCircle(cx, cy, mRadius, mSelectedPaint);
+        int cy = y + mItemHeight /  2;
+        canvas.drawCircle(cx, cy, Math.min(mItemWidth, mItemHeight) / 20 * 9, mSelectedPaint);
         return false;
     }
 
@@ -118,44 +74,50 @@ public class MySimpleMonthView extends MonthView {
 
     @Override
     protected void onDrawText(Canvas canvas, Calendar calendar, int x, int y, boolean hasScheme, boolean isSelected) {
-        float baselineY = mTextBaseLine + y;
-        int cx = x + mItemWidth / 2;int cy = y + mItemHeight / 2;
-        int top = y - mItemHeight / 6;
+        int cx = x + mItemWidth / 2;
+        int cy = y + mItemHeight / 2;
 
-//        if (isSelected) {
-//            canvas.drawText(String.valueOf(calendar.getDay()),
-//                    cx,
-//                    baselineY,
-//                    mSelectTextPaint);
-//        } else if (hasScheme) {
+        //画日期数字
+        canvas.drawText(String.valueOf(calendar.getDay()), cx, cy,
+                isSelected ? mSelectTextPaint :
+                    calendar.isCurrentDay() ? mCurDayTextPaint :
+                        !calendar.isCurrentMonth() ? mOtherMonthTextPaint :
+                            calendar.isWeekend() ? mWeekEndTextPaint : mCurMonthTextPaint);
+
+        //画农历
+        canvas.drawText(calendar.getLunar(), cx, cy + mItemHeight / 4,
+                isSelected ? mSelectedLunarTextPaint :
+                    calendar.isCurrentDay() ? mCurDayLunarTextPaint :
+                        (!TextUtils.isEmpty(calendar.getSolarTerm()) ||
+                                !TextUtils.isEmpty(calendar.getGregorianFestival()) ||
+                                !TextUtils.isEmpty(calendar.getTraditionFestival())) ? mSolarTermTextPaint :
+                                 mCurMonthLunarTextPaint);
+
+        if (hasScheme) {
             //画右上角
             //画右上角标记的圆形背景
-            canvas.drawCircle(x + mItemWidth - mPadding - mCircleRadius / 2,
-                    y + mPadding + mCircleRadius, mCircleRadius, mSchemeBasicPaint);
-            //设置右上角标记文字的颜色
-            mTextPaint.setColor(calendar.getSchemeColor());
-            //画右上角文字
-            canvas.drawText(calendar.getScheme(), x + mItemWidth - mPadding - mCircleRadius,
-                    y + mPadding + mSchemeBaseLine, mTextPaint);
+//            canvas.drawCircle(x + mItemWidth ,
+//                    y + mItemHeight / 4, dipToPx(getContext(), 7), mSchemeBasicPaint);
+            //画右上角文字, mSchemeTextPaint右上角文本标记的画笔
+            if(isSelected){
+                mSchemeTextPaint.setColor(0xffffffff);
+            }else {
+                switch (calendar.getScheme()) {
+                    case "班":
+                        mSchemeTextPaint.setColor(0xffff0000);
+                        break;
+                    default:
+                        mSchemeTextPaint.setColor(0xff489dff);
+                        break;
+                }
+            }
+            mSchemeTextPaint.setTextSize(dipToPx(context, 8));
+            canvas.drawText(calendar.getScheme(), x + mItemWidth - mItemWidth / 4,
+                    y + mItemHeight / 3, mSchemeTextPaint);
 
-            //画日期
-            canvas.drawText(String.valueOf(calendar.getDay()),
-                    cx,
-                    baselineY,
-                    calendar.isCurrentDay() ? mCurDayTextPaint :
-                            calendar.isCurrentMonth() ? mSchemeTextPaint : mOtherMonthTextPaint);
-
-//            //画农历
-//            canvas.drawText(calendar.getLunar(), cx, baselineY + mItemHeight / 4,
-//                    //今天是否是24节气
-//                    !TextUtils.isEmpty(calendar.getSolarTerm()) ? mSolarTermTextPaint : mCurMonthLunarTextPaint);
-
-//        } else {
-//            canvas.drawText(String.valueOf(calendar.getDay()), cx, baselineY,
-//                    calendar.isCurrentDay() ? mCurDayTextPaint :
-//                            calendar.isCurrentMonth() ? mCurMonthTextPaint : mOtherMonthTextPaint);
-//        }
-
+//            canvas.drawCircle(cx ,
+//                    y + mItemHeight - mItemHeight / 7, dipToPx(getContext(), 2), mPointPaint);
+        }
     }
 
     private static int dipToPx(Context context, float dpValue) {

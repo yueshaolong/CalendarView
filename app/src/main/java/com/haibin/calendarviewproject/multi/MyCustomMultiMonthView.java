@@ -1,4 +1,4 @@
-package com.haibin.calendarviewproject.range;
+package com.haibin.calendarviewproject.multi;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -7,18 +7,25 @@ import android.graphics.Paint;
 import android.text.TextUtils;
 
 import com.haibin.calendarview.Calendar;
-import com.haibin.calendarview.RangeMonthView;
+import com.haibin.calendarview.MultiMonthView;
 
-/**
- * 范围选择月视图
- * Created by huanghaibin on 2018/9/13.
- */
-
-public class MyCustomRangeMonthView extends RangeMonthView {
+public class MyCustomMultiMonthView extends MultiMonthView {
     private Context context;
     private int mRadius;
+    /**
+     * 背景圆点
+     */
+    private Paint mPointPaint = new Paint();
+    /**
+     * 周末画笔
+     */
+    private Paint mWeekEndTextPaint = new Paint();
+    /**
+     * 24节气画笔
+     */
+    private Paint mSolarTermTextPaint = new Paint();
 
-    public MyCustomRangeMonthView(Context context) {
+    public MyCustomMultiMonthView(Context context) {
         super(context);
         this.context = context;
 
@@ -37,18 +44,7 @@ public class MyCustomRangeMonthView extends RangeMonthView {
         mPointPaint.setTextAlign(Paint.Align.CENTER);
         mPointPaint.setColor(Color.RED);
     }
-    /**
-     * 背景圆点
-     */
-    private Paint mPointPaint = new Paint();
-    /**
-     * 周末画笔
-     */
-    private Paint mWeekEndTextPaint = new Paint();
-    /**
-     * 24节气画笔
-     */
-    private Paint mSolarTermTextPaint = new Paint();
+
 
     @Override
     protected void onPreviewHook() {
@@ -75,7 +71,7 @@ public class MyCustomRangeMonthView extends RangeMonthView {
             canvas.drawCircle(cx, cy, mRadius, mSelectedPaint);
         }
 
-        return true;
+        return false;
     }
 
     @Override
@@ -83,11 +79,34 @@ public class MyCustomRangeMonthView extends RangeMonthView {
 //        int cx = x + mItemWidth / 2;
 //        int cy = y + mItemHeight / 2;
 //        canvas.drawCircle(cx, cy, mRadius, mSchemePaint);
-
     }
 
     @Override
     protected void onDrawText(Canvas canvas, Calendar calendar, int x, int y, boolean hasScheme, boolean isSelected) {
+//        float baselineY = mTextBaseLine + y;
+//        int cx = x + mItemWidth / 2;
+
+//        boolean isInRange = isInRange(calendar);
+//        boolean isEnable = !onCalendarIntercept(calendar);
+//
+//        if (isSelected) {
+//            canvas.drawText(String.valueOf(calendar.getDay()),
+//                    cx,
+//                    baselineY,
+//                    mSelectTextPaint);
+//        } else if (hasScheme) {
+//            canvas.drawText(String.valueOf(calendar.getDay()),
+//                    cx,
+//                    baselineY,
+//                    calendar.isCurrentDay() ? mCurDayTextPaint :
+//                            calendar.isCurrentMonth() && isInRange && isEnable? mSchemeTextPaint : mOtherMonthTextPaint);
+//
+//        } else {
+//            canvas.drawText(String.valueOf(calendar.getDay()), cx, baselineY,
+//                    calendar.isCurrentDay() ? mCurDayTextPaint :
+//                            calendar.isCurrentMonth() && isInRange && isEnable? mCurMonthTextPaint : mOtherMonthTextPaint);
+//        }
+
         int cx = x + mItemWidth / 2;
         int cy = y + mItemHeight / 2;
 
@@ -132,7 +151,6 @@ public class MyCustomRangeMonthView extends RangeMonthView {
 //            canvas.drawCircle(cx ,
 //                    y + mItemHeight - mItemHeight / 7, dipToPx(getContext(), 2), mPointPaint);
         }
-
     }
 
     private static int dipToPx(Context context, float dpValue) {

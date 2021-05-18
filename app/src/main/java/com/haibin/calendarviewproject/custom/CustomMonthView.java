@@ -178,8 +178,7 @@ public class CustomMonthView extends MonthView {
             canvas.drawText(calendar.getLunar(), cx, mTextBaseLine + y + mItemHeight / 10,
                     calendar.isCurrentDay() ? mCurDayLunarTextPaint :
                             calendar.isCurrentMonth() ?
-                                    !TextUtils.isEmpty(calendar.getSolarTerm()) ? mSolarTermTextPaint  :
-                                    mCurMonthLunarTextPaint
+                                    !TextUtils.isEmpty(calendar.getSolarTerm()) ? mSolarTermTextPaint  : mCurMonthLunarTextPaint
                                     : mOtherMonthLunarTextPaint);
         }
     }

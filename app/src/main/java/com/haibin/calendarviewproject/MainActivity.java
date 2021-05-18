@@ -25,6 +25,7 @@ import com.haibin.calendarviewproject.meizu.MeiZuActivity;
 import com.haibin.calendarviewproject.meizu.MeiZuMonthView;
 import com.haibin.calendarviewproject.meizu.MeizuWeekView;
 import com.haibin.calendarviewproject.multi.MultiActivity;
+import com.haibin.calendarviewproject.multi.MyMultiActivity;
 import com.haibin.calendarviewproject.pager.ViewPagerActivity;
 import com.haibin.calendarviewproject.progress.ProgressActivity;
 import com.haibin.calendarviewproject.range.MyRangeActivity;
@@ -272,6 +273,7 @@ public class MainActivity extends BaseActivity implements
         findViewById(R.id.ll_tab).setOnClickListener(this);
         findViewById(R.id.ll_single).setOnClickListener(this);
         findViewById(R.id.ll_multi).setOnClickListener(this);
+        findViewById(R.id.ll_multi_my).setOnClickListener(this);
         findViewById(R.id.ll_solar_system).setOnClickListener(this);
         findViewById(R.id.ll_progress).setOnClickListener(this);
         findViewById(R.id.ll_custom).setOnClickListener(this);
@@ -354,6 +356,9 @@ public class MainActivity extends BaseActivity implements
                 break;
             case R.id.ll_multi:
                 MultiActivity.show(this);
+                break;
+            case R.id.ll_multi_my:
+                MyMultiActivity.show(this);
                 break;
             case R.id.ll_solar_system:
                 SolarActivity.show(this);

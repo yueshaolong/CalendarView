@@ -72,8 +72,54 @@ public class MySimpleActivity extends BaseActivity implements
         int day = mCalendarView.getCurDay();
 
         Map<String, Calendar> map = new HashMap<>();
-        map.put(getSchemeCalendar(year, month, 23, 0xFFff0000, "事").toString(),
-                getSchemeCalendar(year, month, 23, 0xFFff0000, "事"));
+        map.put(getSchemeCalendar(year, month, 1, 0xFFff0000, "休").toString(),
+                getSchemeCalendar(year, month, 1, 0xFFff0000, "休"));
+        map.put(getSchemeCalendar(year, month, 2, 0xFFff0000, "休").toString(),
+                getSchemeCalendar(year, month, 2, 0xFFff0000, "休"));
+        map.put(getSchemeCalendar(year, month, 3, 0xFFff0000, "休").toString(),
+                getSchemeCalendar(year, month, 3, 0xFFff0000, "休"));
+        map.put(getSchemeCalendar(year, month, 4, 0xFFff0000, "休").toString(),
+                getSchemeCalendar(year, month, 4, 0xFFff0000, "休"));
+        map.put(getSchemeCalendar(year, month, 5, 0xFFff0000, "休").toString(),
+                getSchemeCalendar(year, month, 5, 0xFFff0000, "休"));
+        map.put(getSchemeCalendar(year, month, 8, 0xFFff0000, "班").toString(),
+                getSchemeCalendar(year, month, 8, 0xFFff0000, "班"));
+
+        map.put(getSchemeCalendar(2021, 6, 12, 0xFFff0000, "休").toString(),
+                getSchemeCalendar(2021, 6, 12, 0xFFff0000, "休"));
+        map.put(getSchemeCalendar(2021, 6, 13, 0xFFff0000, "休").toString(),
+                getSchemeCalendar(2021, 6, 13, 0xFFff0000, "休"));
+        map.put(getSchemeCalendar(2021, 6, 14, 0xFFff0000, "休").toString(),
+                getSchemeCalendar(2021, 6, 14, 0xFFff0000, "休"));
+
+        map.put(getSchemeCalendar(2021, 9, 18, 0xFFff0000, "班").toString(),
+                getSchemeCalendar(2021, 9, 18, 0xFFff0000, "班"));
+        map.put(getSchemeCalendar(2021, 9, 19, 0xFFff0000, "休").toString(),
+                getSchemeCalendar(2021, 9, 19, 0xFFff0000, "休"));
+        map.put(getSchemeCalendar(2021, 9, 20, 0xFFff0000, "休").toString(),
+                getSchemeCalendar(2021, 9, 20, 0xFFff0000, "休"));
+        map.put(getSchemeCalendar(2021, 9, 21, 0xFFff0000, "休").toString(),
+                getSchemeCalendar(2021, 9, 21, 0xFFff0000, "休"));
+        map.put(getSchemeCalendar(2021, 9, 26, 0xFFff0000, "班").toString(),
+                getSchemeCalendar(2021, 9, 26, 0xFFff0000, "班"));
+
+        map.put(getSchemeCalendar(2021, 10, 1, 0xFFff0000, "休").toString(),
+                getSchemeCalendar(2021, 10, 1, 0xFFff0000, "休"));
+        map.put(getSchemeCalendar(2021, 10, 2, 0xFFff0000, "休").toString(),
+                getSchemeCalendar(2021, 10, 2, 0xFFff0000, "休"));
+        map.put(getSchemeCalendar(2021, 10, 3, 0xFFff0000, "休").toString(),
+                getSchemeCalendar(2021, 10, 3, 0xFFff0000, "休"));
+        map.put(getSchemeCalendar(2021, 10, 4, 0xFFff0000, "休").toString(),
+                getSchemeCalendar(2021, 10, 4, 0xFFff0000, "休"));
+        map.put(getSchemeCalendar(2021, 10, 5, 0xFFff0000, "休").toString(),
+                getSchemeCalendar(2021, 10, 5, 0xFFff0000, "休"));
+        map.put(getSchemeCalendar(2021, 10, 6, 0xFFff0000, "休").toString(),
+                getSchemeCalendar(2021, 10, 6, 0xFFff0000, "休"));
+        map.put(getSchemeCalendar(2021, 10, 7, 0xFFff0000, "休").toString(),
+                getSchemeCalendar(2021, 10, 7, 0xFFff0000, "休"));
+        map.put(getSchemeCalendar(2021, 10, 9, 0xFFff0000, "班").toString(),
+                getSchemeCalendar(2021, 10, 9, 0xFFff0000, "班"));
+
         //此方法在巨大的数据量上不影响遍历性能，推荐使用
         mCalendarView.setSchemeDate(map);
     }
